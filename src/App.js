@@ -156,7 +156,7 @@ function App() {
                     <div className="cart-item-actions">
                       <button className="button is-small" onClick={() => decreaseQuantity(item.id)}>-</button>
                       <button className="button is-small" onClick={() => increaseQuantity(item.id)}>+</button>
-                      <button className="button is-small is-danger is-light" onClick={() => removeFromCart(item.id)}>
+                      <button className="button is-small is-danger" onClick={() => removeFromCart(item.id)}>
                         Sil
                       </button>
                     </div>
