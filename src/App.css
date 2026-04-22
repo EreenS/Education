@@ -7,6 +7,10 @@
   padding-top: 1rem;
 }
 
+.button-wrapper {
+  margin-bottom: 1.5rem;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
