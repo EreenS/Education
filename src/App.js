@@ -3,6 +3,7 @@ import './App.css';
 import Course from './Course';
 
 function App() {
+  // Ekranda gösterilecek kursların sabit listesi.
   const [courses] = useState([
     {
       id: 1,
@@ -56,9 +57,11 @@ function App() {
     }
   ]);
 
+  // Sepete eklenen kursları ve sepet penceresinin durumunu tutuyoruz.
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
+  // Aynı kurs tekrar eklenirse adetini artır, yoksa yeni satır olarak ekle.
   const addToCart = (course) => {
     setCartItems((prevCartItems) => {
       const existingCourse = prevCartItems.find((item) => item.id === course.id);
@@ -75,6 +78,7 @@ function App() {
     });
   };
 
+  // Sepetteki seçili kursun adetini artır.
   const increaseQuantity = (courseId) => {
     setCartItems((prevCartItems) => (
       prevCartItems.map((item) => (
@@ -85,6 +89,7 @@ function App() {
     ));
   };
 
+  // Sepetteki seçili kursun adetini azalt; 0 olursa tamamen sil.
   const decreaseQuantity = (courseId) => {
     setCartItems((prevCartItems) => (
       prevCartItems
@@ -97,14 +102,17 @@ function App() {
     ));
   };
 
+  // Sepetten tek bir kursu kaldır.
   const removeFromCart = (courseId) => {
     setCartItems((prevCartItems) => prevCartItems.filter((item) => item.id !== courseId));
   };
 
+  // Sepeti tamamen temizle.
   const clearCart = () => {
     setCartItems([]);
   };
 
+  // Sepetteki toplam kurs adedini hesapla.
   const totalCartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
@@ -121,6 +129,7 @@ function App() {
         </div>
       </section>
 
+      {/* Kurs kartlarını grid düzeninde gösteriyoruz. */}
       <div className='course-section container'>
         <div className='columns is-multiline'>
           {courses.map((course) => (
@@ -135,6 +144,7 @@ function App() {
         </div>
       </div>
 
+      {/* Sepet penceresi: sadece isCartOpen true olduğunda görünür. */}
       <div className={`modal ${isCartOpen ? 'is-active' : ''}`}>
         <div className="modal-background" onClick={() => setIsCartOpen(false)}></div>
         <div className="modal-card">
