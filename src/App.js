@@ -75,6 +75,36 @@ function App() {
     });
   };
 
+  const increaseQuantity = (courseId) => {
+    setCartItems((prevCartItems) => (
+      prevCartItems.map((item) => (
+        item.id === courseId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      ))
+    ));
+  };
+
+  const decreaseQuantity = (courseId) => {
+    setCartItems((prevCartItems) => (
+      prevCartItems
+        .map((item) => (
+          item.id === courseId
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        ))
+        .filter((item) => item.quantity > 0)
+    ));
+  };
+
+  const removeFromCart = (courseId) => {
+    setCartItems((prevCartItems) => prevCartItems.filter((item) => item.id !== courseId));
+  };
+
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   const totalCartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
@@ -116,14 +146,29 @@ function App() {
             {cartItems.length === 0 ? (
               <p>Sepetiniz boş. Kurs kartlarındaki Sepete Ekle butonunu kullanabilirsiniz.</p>
             ) : (
-              <ul>
+              <ul className="cart-list">
                 {cartItems.map((item) => (
-                  <li key={item.id}>{item.title} x {item.quantity}</li>
+                  <li key={item.id} className="cart-item">
+                    <div className="cart-item-info">
+                      <strong>{item.title}</strong>
+                      <span>Adet: {item.quantity}</span>
+                    </div>
+                    <div className="cart-item-actions">
+                      <button className="button is-small" onClick={() => decreaseQuantity(item.id)}>-</button>
+                      <button className="button is-small" onClick={() => increaseQuantity(item.id)}>+</button>
+                      <button className="button is-small is-danger is-light" onClick={() => removeFromCart(item.id)}>
+                        Sil
+                      </button>
+                    </div>
+                  </li>
                 ))}
               </ul>
             )}
           </section>
-          <footer className="modal-card-foot is-justify-content-flex-end">
+          <footer className="modal-card-foot is-justify-content-space-between">
+            <button className="button is-danger" onClick={clearCart} disabled={cartItems.length === 0}>
+              Sepeti Temizle
+            </button>
             <button className="button" onClick={() => setIsCartOpen(false)}>Kapat</button>
           </footer>
         </div>
