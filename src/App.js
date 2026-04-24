@@ -1,12 +1,20 @@
 import { useState } from 'react';
 import './App.css';
 import Course from './Course';
+import CourseDialog from './CourseDialog';
 import { coursesData } from './coursesData';
 
 function App() {
   // Sepete eklenen kursları ve sepet penceresinin durumunu tutuyoruz.
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Dialog state'i: selectedCourse hangi dersin detaylandığını, isDialogOpen ise dialog açık mı kapalı mı tutuyor
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Her dersin yorumlarını tutuyoruz. Örnek: { 1: [...], 2: [...] }
+  const [courseComments, setCourseComments] = useState({});
 
   // Aynı kurs tekrar eklenirse adetini artır, yoksa yeni satır olarak ekle.
   const addToCart = (course) => {
@@ -62,6 +70,26 @@ function App() {
   // Sepetteki toplam kurs adedini hesapla.
   const totalCartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
+  // Dialog açma fonksiyonu
+  const openDialog = (course) => {
+    setSelectedCourse(course);
+    setIsDialogOpen(true);
+  };
+
+  // Dialog kapama fonksiyonu
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedCourse(null);
+  };
+
+  // Yorum ekleme fonksiyonu - courseId'ye göre yorumları gruplayıp sakla
+  const handleCommentSubmit = (courseId, newComment) => {
+    setCourseComments((prev) => ({
+      ...prev,
+      [courseId]: [...(prev[courseId] || []), newComment]
+    }));
+  };
+
   return (
     <div className="App">
       <section className="hero is-primary">
@@ -85,11 +113,21 @@ function App() {
                 title={course.title}
                 description={course.description}
                 onAddToCart={() => addToCart(course)}
+                onCourseClick={() => openDialog(course)}
               />
             </div>
           ))}
         </div>
       </div>
+
+      {/* Ders detayları dialog'u */}
+      <CourseDialog
+        course={selectedCourse}
+        isOpen={isDialogOpen}
+        onClose={closeDialog}
+        comments={selectedCourse ? (courseComments[selectedCourse.id] || []) : []}
+        onCommentSubmit={handleCommentSubmit}
+      />
 
       {/* Sepet penceresi: sadece isCartOpen true olduğunda görünür. */}
       <div className={`modal ${isCartOpen ? 'is-active' : ''}`}>
