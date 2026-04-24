@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import Course from './Course';
 import CourseDialog from './CourseDialog';
@@ -14,7 +14,20 @@ function App() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Her dersin yorumlarını tutuyoruz. Örnek: { 1: [...], 2: [...] }
-  const [courseComments, setCourseComments] = useState({});
+  // İlk yüklemede localStorage'dan okuyup kalıcılık sağlıyoruz.
+  const [courseComments, setCourseComments] = useState(() => {
+    try {
+      const savedComments = localStorage.getItem('courseComments');
+      return savedComments ? JSON.parse(savedComments) : {};
+    } catch (error) {
+      return {};
+    }
+  });
+
+  // Yorumlar değiştikçe localStorage'a yaz.
+  useEffect(() => {
+    localStorage.setItem('courseComments', JSON.stringify(courseComments));
+  }, [courseComments]);
 
   // Aynı kurs tekrar eklenirse adetini artır, yoksa yeni satır olarak ekle.
   const addToCart = (course) => {
