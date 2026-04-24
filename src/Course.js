@@ -1,10 +1,10 @@
 import React from 'react'
 
-function Course({ title, description, onAddToCart }) {
+function Course({ title, description, onAddToCart, onCourseClick }) {
     return (
         // Tek bir kursu gösteren yeniden kullanılabilir kart.
         <div className="card course-card">
-            <div className="card-content">
+            <div className="card-content" style={{ cursor: 'pointer' }} onClick={onCourseClick}>
                 <p className="title is-4">{title}</p>
                 <p className="subtitle is-6">{description}</p>
             </div>
